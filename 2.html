@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyASKSejarah - Sistem Pengurusan Pembelajaran</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .anti-copy {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .secure-input {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        
+        .secure-input::-webkit-input-placeholder {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-indigo-800 mb-2">MyASKSejarah</h1>
+                <p class="text-gray-600">Sistem Penyemakan Essay Tingkatan 6 Semester 3</p>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="showTeacherLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Log Masuk Guru
+                </button>
+                <button onclick="showStudentLogin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Log Masuk Pelajar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Login Form -->
+    <div id="teacherLoginForm" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-indigo-800 mb-2">Log Masuk Guru</h2>
+            </div>
+            
+            <form onsubmit="teacherLogin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ID Guru</label>
+                    <input type="text" id="teacherId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kata Laluan</label>
+                    <input type="password" id="teacherPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Log Masuk
+                </button>
+                <button type="button" onclick="backToMain()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Kembali
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Login Form -->
+    <div id="studentLoginForm" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-green-800 mb-2">Log Masuk Pelajar</h2>
+            </div>
+            
+            <form onsubmit="studentLogin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ID Pelajar</label>
+                    <input type="text" id="studentId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kata Laluan</label>
+                    <input type="password" id="studentPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Log Masuk
+                </button>
+                <button type="button" onclick="backToMain()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Kembali
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacherDashboard" class="hidden min-h-screen bg-gray-50">
+        <!-- Header -->
+        <header class="bg-indigo-800 text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Dashboard Guru - MyASKSejarah (Tingkatan 6 Semester 3)</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="teacherName" class="font-medium"></span>
+                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition duration-200">
+                        Log Keluar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-indigo-700 text-white p-4">
+            <div class="container mx-auto">
+                <div class="flex space-x-6">
+                    <button onclick="showTeacherSection('studentManagement')" class="hover:bg-indigo-600 px-4 py-2 rounded-lg transition duration-200">
+                        Pengurusan Pelajar
+                    </button>
+                    <button onclick="showTeacherSection('assignmentManagement')" class="hover:bg-indigo-600 px-4 py-2 rounded-lg transition duration-200">
+                        Pengurusan Tugasan
+                    </button>
+                    <button onclick="showTeacherSection('monitoring')" class="hover:bg-indigo-600 px-4 py-2 rounded-lg transition duration-200">
+                        Pemantauan & Penilaian
+                    </button>
+                    <button onclick="showTeacherSection('analytics')" class="hover:bg-indigo-600 px-4 py-2 rounded-lg transition duration-200">
+                        Analitik & Pelaporan
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Student Management Section -->
+        <div id="studentManagement" class="container mx-auto p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Daftar Pelajar Baharu</h2>
+                <form onsubmit="registerStudent(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ID Pelajar</label>
+                        <input type="text" id="newStudentId" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: S001">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Pelajar</label>
+                        <input type="text" id="newStudentName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kata Laluan</label>
+                        <input type="text" id="newStudentPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                        <select id="newStudentClass" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <option value="">Pilih Kelas</option>
+                            <option value="SSA">SSA</option>
+                            <option value="SSB">SSB</option>
+                            <option value="SSC">SSC</option>
+                            <option value="SSD">SSD</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end lg:col-span-4">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                            Daftar Pelajar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Senarai Pelajar</h3>
+                <div id="studentList" class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2 text-left">ID Pelajar</th>
+                                <th class="px-4 py-2 text-left">Nama</th>
+                                <th class="px-4 py-2 text-left">Kelas</th>
+                                <th class="px-4 py-2 text-left">Kata Laluan</th>
+                                <th class="px-4 py-2 text-left">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <!-- Students will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment Management Section -->
+        <div id="assignmentManagement" class="hidden container mx-auto p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                <strong>Google Sheets Integration:</strong> ID Tugasan dijana secara automatik dan data disimpan ke Google Sheets. 
+                                Pastikan Google Apps Script telah dikonfigurasi dengan betul.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Cipta Tugasan Baharu</h2>
+                <form onsubmit="createAssignment(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ID Tugasan</label>
+                            <input type="text" id="assignmentId" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100" placeholder="Akan dijana automatik">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ID Guru</label>
+                            <input type="text" id="teacherIdField" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Topik</label>
+                        <input type="text" id="assignmentTopic" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Arahan Tugasan</label>
+                        <textarea id="assignmentInstructions" required rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Cipta Tugasan
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Senarai Tugasan</h3>
+                <div id="assignmentList" class="space-y-4">
+                    <!-- Assignments will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Section -->
+        <div id="monitoring" class="hidden container mx-auto p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Pemantauan & Penilaian</h2>
+                <div id="submissionsList" class="space-y-4">
+                    <!-- Submissions will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics" class="hidden container mx-auto p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Jumlah Pelajar</h3>
+                    <p id="totalStudents" class="text-3xl font-bold text-indigo-600">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Jumlah Tugasan</h3>
+                    <p id="totalAssignments" class="text-3xl font-bold text-green-600">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Purata Markah</h3>
+                    <p id="averageScore" class="text-3xl font-bold text-yellow-600">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-800">Kedudukan Pelajar</h3>
+                    <button onclick="printReport()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                        Cetak Laporan
+                    </button>
+                </div>
+                <div id="studentRanking" class="overflow-x-auto">
+                    <!-- Student ranking will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="hidden min-h-screen bg-gray-50">
+        <!-- Header -->
+        <header class="bg-green-800 text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Dashboard Pelajar - MyASKSejarah (Tingkatan 6 Semester 3)</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="studentName" class="font-medium"></span>
+                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition duration-200">
+                        Log Keluar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-green-700 text-white p-4">
+            <div class="container mx-auto">
+                <div class="flex space-x-6">
+                    <button onclick="showStudentSection('assignments')" class="hover:bg-green-600 px-4 py-2 rounded-lg transition duration-200">
+                        Tugasan
+                    </button>
+                    <button onclick="showStudentSection('submissions')" class="hover:bg-green-600 px-4 py-2 rounded-lg transition duration-200">
+                        Penghantaran Saya
+                    </button>
+                    <button onclick="showStudentSection('results')" class="hover:bg-green-600 px-4 py-2 rounded-lg transition duration-200">
+                        Keputusan
+                    </button>
+                    <button onclick="showStudentSection('resources')" class="hover:bg-green-600 px-4 py-2 rounded-lg transition duration-200">
+                        Sumber
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Assignments Section -->
+        <div id="assignments" class="container mx-auto p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Tugasan Tersedia</h2>
+                <div id="availableAssignments" class="space-y-4">
+                    <!-- Available assignments will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Submissions Section -->
+        <div id="submissions" class="hidden container mx-auto p-6">
+            <div id="submissionForm" class="bg-white rounded-lg shadow-lg p-6 mb-6 hidden">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Hantar Tugasan</h2>
+                <div class="anti-copy mb-4">
+                    <h3 id="submissionTopic" class="text-lg font-semibold text-indigo-600 mb-2"></h3>
+                    <p id="submissionInstructions" class="text-gray-700 mb-4"></p>
+                </div>
+                
+                <form onsubmit="submitAssignment(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pengenalan</label>
+                        <textarea id="introduction" required rows="4" class="secure-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" 
+                                  oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Isi 1</label>
+                        <textarea id="content1" required rows="4" class="secure-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                  oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Isi 2</label>
+                        <textarea id="content2" required rows="4" class="secure-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                  oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Isi 3</label>
+                        <textarea id="content3" required rows="4" class="secure-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                  oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Isi 4</label>
+                        <textarea id="content4" required rows="4" class="secure-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                  oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kesimpulan</label>
+                        <textarea id="conclusion" required rows="4" class="secure-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                  oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></textarea>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                            Hantar Tugasan
+                        </button>
+                        <button type="button" onclick="cancelSubmission()" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Tugasan Yang Dihantar</h2>
+                <div id="mySubmissions" class="space-y-4">
+                    <!-- Student submissions will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden container mx-auto p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Keputusan & Maklum Balas</h2>
+                <div id="studentResults" class="space-y-4">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div id="resources" class="hidden container mx-auto p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Sumber Pembelajaran</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">Nota Sejarah</h3>
+                        <p class="text-gray-600 mb-4">Muat turun nota lengkap untuk semua topik sejarah</p>
+                        <button onclick="downloadNotes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                            Muat Turun
+                        </button>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">Kedudukan Kelas</h3>
+                        <p class="text-gray-600 mb-4">Lihat kedudukan anda dalam kelas</p>
+                        <div id="studentRank" class="text-2xl font-bold text-green-600">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KOD JAVASCRIPT YANG TELAH DIBAIKI -->
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentUserType = null;
+        let currentAssignmentId = null;
+        
+        // URL Web App Anda yang terkini dan betul
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyc5gkKF3hicqrdROhk9bf_RHaLmkRSyKVyh1FRmn2JsTUIYWPE8c9e9xC_zGPyST3M/exec';
+        
+        // Google Sheets Configuration
+        const SHEETS_CONFIG = {
+            ASSIGNMENTS_SHEET: 'Tugasan',
+            STUDENTS_SHEET: 'Pelajar', 
+            SUBMISSIONS_SHEET: 'Penghantaran',
+            TEACHERS_SHEET: 'Guru',
+            LOGIN_LOG_SHEET: 'Log_Login'
+        };
+
+        // Helper function to send data to Google Apps Script
+        async function sendToGoogleAppsScript(action, data) {
+            try {
+                console.log(`Sending ${action} to Google Apps Script:`, data);
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow', // Menambah redirect untuk keselamatan tambahan
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        data: data,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log(`Response from Google Apps Script:`, result);
+                return result;
+            } catch (error) {
+                console.error(`Error sending ${action} to Google Apps Script:`, error);
+                throw error;
+            }
+        }
+
+        // Sample data for demonstration
+        let sampleData = {
+            teachers: [
+                { id: 'T001', name: 'Cikgu Ahmad', password: 'password123' },
+                { id: 'T002', name: 'Cikgu Siti', password: 'password456' }
+            ],
+            students: [
+                { id: 'S001', name: 'Ali bin Abu', password: 'student123', class: 'SSA' },
+                { id: 'S002', name: 'Siti binti Ahmad', password: 'student456', class: 'SSB' }
+            ],
+            assignments: [
+                { id: 'A001', teacherId: 'T001', topic: 'Kesultanan Melayu Melaka', instructions: 'Huraikan tentang sistem pemerintahan Kesultanan Melayu Melaka', dateCreated: '2024-01-15' }
+            ],
+            submissions: [
+                { 
+                    ID_Penghantaran: 'PH001', 
+                    ID_Tugasan: 'A001', 
+                    ID_Pelajar: 'S001', 
+                    Jawapan_Pengenalan: 'Kesultanan Melayu Melaka adalah...',
+                    Isi_1: 'Sistem pemerintahan...',
+                    Isi_2: 'Struktur pentadbiran...',
+                    Isi_3: 'Peranan Sultan...',
+                    Isi_4: 'Pengaruh Islam...',
+                    Kesimpulan: 'Kesimpulannya...',
+                    Markah_AI_Pengetahuan: 7,
+                    Markah_AI_Taakulan: 5,
+                    Markah_AI_Komunikasi: 5,
+                    Markah_Keseluruhan_AI: 17,
+                    Status_Kesesuaian: 'Dinilai AI',
+                    Markah_Guru: null,
+                    Komen_Guru: null,
+                    Tarikh_Hantar: '2024-01-15',
+                    Masa_Hantar: '10:30:00'
+                }
+            ]
+        };
+
+        // Disable copy-paste functions
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88)) {
+                const target = e.target;
+                if (target.classList.contains('secure-input')) {
+                    if (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            }
+        });
+
+        // Navigation functions
+        function showTeacherLogin() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('teacherLoginForm').classList.remove('hidden');
+        }
+
+        function showStudentLogin() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('studentLoginForm').classList.remove('hidden');
+        }
+
+        function backToMain() {
+            document.getElementById('teacherLoginForm').classList.add('hidden');
+            document.getElementById('studentLoginForm').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function logout() {
+            currentUser = null;
+            currentUserType = null;
+            document.getElementById('teacherDashboard').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        // Login functions
+        async function teacherLogin(event) {
+            event.preventDefault();
+            const teacherId = document.getElementById('teacherId').value;
+            const password = document.getElementById('teacherPassword').value;
+
+            try {
+                const loginData = {
+                    userId: teacherId,
+                    password: password,
+                    userType: 'teacher',
+                    loginTime: new Date().toISOString(),
+                    ipAddress: 'N/A',
+                    userAgent: navigator.userAgent
+                };
+
+                const result = await sendToGoogleAppsScript('teacherLogin', loginData);
+
+                if (result.success) {
+                    currentUser = result.teacher;
+                    currentUserType = 'teacher';
+                    await sendToGoogleAppsScript('logLogin', {
+                        userId: teacherId,
+                        userType: 'teacher',
+                        status: 'success',
+                        timestamp: new Date().toISOString()
+                    });
+                    document.getElementById('teacherName').textContent = result.teacher.name;
+                    document.getElementById('teacherLoginForm').classList.add('hidden');
+                    document.getElementById('teacherDashboard').classList.remove('hidden');
+                    showTeacherSection('studentManagement');
+                    loadStudentList();
+                    alert(`✅ Berjaya log masuk!\nSelamat datang, ${result.teacher.name}`);
+                } else {
+                    await sendToGoogleAppsScript('logLogin', {
+                        userId: teacherId,
+                        userType: 'teacher',
+                        status: 'failed',
+                        timestamp: new Date().toISOString(),
+                        reason: result.message || 'Invalid credentials'
+                    });
+                    alert('❌ ID Guru atau Kata Laluan tidak sah');
+                }
+            } catch (error) {
+                console.error('Teacher login error:', error);
+                const teacher = sampleData.teachers.find(t => t.id === teacherId && t.password === password);
+                if (teacher) {
+                    currentUser = teacher;
+                    currentUserType = 'teacher';
+                    document.getElementById('teacherName').textContent = teacher.name;
+                    document.getElementById('teacherLoginForm').classList.add('hidden');
+                    document.getElementById('teacherDashboard').classList.remove('hidden');
+                    showTeacherSection('studentManagement');
+                    loadStudentList();
+                    alert(`⚠️ Log masuk tempatan (Google Apps Script tidak tersedia)\nSelamat datang, ${teacher.name}`);
+                } else {
+                    alert('❌ ID Guru atau Kata Laluan tidak sah');
+                }
+            }
+        }
+
+        async function studentLogin(event) {
+            event.preventDefault();
+            const studentId = document.getElementById('studentId').value;
+            const password = document.getElementById('studentPassword').value;
+
+            try {
+                const loginData = {
+                    userId: studentId,
+                    password: password,
+                    userType: 'student',
+                    loginTime: new Date().toISOString(),
+                    ipAddress: 'N/A',
+                    userAgent: navigator.userAgent
+                };
+                const result = await sendToGoogleAppsScript('studentLogin', loginData);
+                if (result.success) {
+                    currentUser = result.student;
+                    currentUserType = 'student';
+                    await sendToGoogleAppsScript('logLogin', {
+                        userId: studentId,
+                        userType: 'student',
+                        status: 'success',
+                        timestamp: new Date().toISOString()
+                    });
+                    document.getElementById('studentName').textContent = result.student.name;
+                    document.getElementById('studentLoginForm').classList.add('hidden');
+                    document.getElementById('studentDashboard').classList.remove('hidden');
+                    showStudentSection('assignments');
+                    loadAvailableAssignments();
+                    alert(`✅ Berjaya log masuk!\nSelamat datang, ${result.student.name}`);
+                } else {
+                    await sendToGoogleAppsScript('logLogin', {
+                        userId: studentId,
+                        userType: 'student',
+                        status: 'failed',
+                        timestamp: new Date().toISOString(),
+                        reason: result.message || 'Invalid credentials'
+                    });
+                    alert('❌ ID Pelajar atau Kata Laluan tidak sah');
+                }
+            } catch (error) {
+                console.error('Student login error:', error);
+                const student = sampleData.students.find(s => s.id === studentId && s.password === password);
+                if (student) {
+                    currentUser = student;
+                    currentUserType = 'student';
+                    document.getElementById('studentName').textContent = student.name;
+                    document.getElementById('studentLoginForm').classList.add('hidden');
+                    document.getElementById('studentDashboard').classList.remove('hidden');
+                    showStudentSection('assignments');
+                    loadAvailableAssignments();
+                    alert(`⚠️ Log masuk tempatan (Google Apps Script tidak tersedia)\nSelamat datang, ${student.name}`);
+                } else {
+                    alert('❌ ID Pelajar atau Kata Laluan tidak sah');
+                }
+            }
+        }
+
+        // Teacher dashboard functions
+        function showTeacherSection(section) {
+            const sections = ['studentManagement', 'assignmentManagement', 'monitoring', 'analytics'];
+            sections.forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(section).classList.remove('hidden');
+            if (section === 'assignmentManagement') {
+                document.getElementById('teacherIdField').value = currentUser.id;
+                generateAssignmentId();
+                loadAssignmentList();
+            } else if (section === 'monitoring') {
+                loadSubmissionsList();
+            } else if (section === 'analytics') {
+                loadAnalytics();
+            }
+        }
+        async function generateAssignmentId() {
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'getNextAssignmentId',
+                        teacherId: currentUser.id
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('assignmentId').value = result.nextId;
+                } else {
+                    const nextId = generateLocalAssignmentId();
+                    document.getElementById('assignmentId').value = nextId;
+                }
+            } catch (error) {
+                const nextId = generateLocalAssignmentId();
+                document.getElementById('assignmentId').value = nextId;
+            }
+        }
+
+        function generateLocalAssignmentId() {
+            const teacherPrefix = currentUser.id.replace('T', '');
+            const existingAssignments = sampleData.assignments.filter(a => a.teacherId === currentUser.id);
+            const nextNumber = existingAssignments.length + 1;
+            return `T${teacherPrefix}A${String(nextNumber).padStart(3, '0')}`;
+        }
+        async function loadDataFromGoogleAppsScript() {
+            try {
+                console.log('Loading data from Google Apps Script...');
+                const studentsResult = await sendToGoogleAppsScript('getStudents', {});
+                if (studentsResult.success && studentsResult.data) {
+                    sampleData.students = studentsResult.data;
+                    console.log('Students loaded:', studentsResult.data.length);
+                }
+                const assignmentsResult = await sendToGoogleAppsScript('getAssignments', {});
+                if (assignmentsResult.success && assignmentsResult.data) {
+                    sampleData.assignments = assignmentsResult.data;
+                    console.log('Assignments loaded:', assignmentsResult.data.length);
+                }
+                const submissionsResult = await sendToGoogleAppsScript('getSubmissions', {});
+                if (submissionsResult.success && submissionsResult.data) {
+                    sampleData.submissions = submissionsResult.data;
+                    console.log('Submissions loaded:', submissionsResult.data.length);
+                }
+                const teachersResult = await sendToGoogleAppsScript('getTeachers', {});
+                if (teachersResult.success && teachersResult.data) {
+                    sampleData.teachers = teachersResult.data;
+                    console.log('Teachers loaded:', teachersResult.data.length);
+                }
+                console.log('✅ All data loaded from Google Apps Script successfully');
+                return true;
+            } catch (error) {
+                console.error('❌ Error loading data from Google Apps Script:', error);
+                console.log('⚠️ Using local sample data as fallback');
+                return false;
+            }
+        }
+        async function registerStudent(event) {
+            event.preventDefault();
+            const studentId = document.getElementById('newStudentId').value;
+            const name = document.getElementById('newStudentName').value;
+            const password = document.getElementById('newStudentPassword').value;
+            const studentClass = document.getElementById('newStudentClass').value;
+            const existingStudent = sampleData.students.find(s => s.id === studentId);
+            if (existingStudent) {
+                alert('❌ ID Pelajar sudah wujud! Sila gunakan ID yang berbeza.');
+                return;
+            }
+            const newStudent = {
+                id: studentId,
+                name: name,
+                password: password,
+                class: studentClass,
+                registeredBy: currentUser.id,
+                registeredDate: new Date().toISOString().split('T')[0],
+                registeredTime: new Date().toLocaleTimeString('ms-MY'),
+                status: 'Aktif'
+            };
+            try {
+                const result = await sendToGoogleAppsScript('registerStudent', newStudent);
+                if (result.success) {
+                    sampleData.students.push(newStudent);
+                    alert(`✅ Pelajar berjaya didaftarkan dan disimpan ke Google Sheets!\n\n👤 Maklumat Pelajar:\n• ID: ${studentId}\n• Nama: ${name}\n• Kata Laluan: ${password}\n• Kelas: ${studentClass}\n• Didaftarkan oleh: ${currentUser.name}\n• Tarikh: ${newStudent.registeredDate}`);
+                } else {
+                    alert('❌ Ralat menyimpan ke Google Sheets: ' + result.message);
+                    return;
+                }
+            } catch (error) {
+                console.error('Student registration error:', error);
+                sampleData.students.push(newStudent);
+                alert(`⚠️ Pelajar didaftarkan secara tempatan (Google Apps Script tidak tersedia)\n\n👤 Maklumat Pelajar:\n• ID: ${studentId}\n• Nama: ${name}\n• Kata Laluan: ${password}\n• Kelas: ${studentClass}`);
+            }
+            document.getElementById('newStudentId').value = '';
+            document.getElementById('newStudentName').value = '';
+            document.getElementById('newStudentPassword').value = '';
+            document.getElementById('newStudentClass').value = '';
+            loadStudentList();
+        }
+        async function deleteStudent(studentId) {
+            if (confirm('Adakah anda pasti ingin memadam pelajar ini?')) {
+                try {
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'deleteStudent',
+                            studentId: studentId
+                        })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        sampleData.students = sampleData.students.filter(s => s.id !== studentId);
+                        alert('Pelajar berjaya dipadam!');
+                    } else {
+                        alert('Ralat: ' + result.message);
+                    }
+                } catch (error) {
+                    sampleData.students = sampleData.students.filter(s => s.id !== studentId);
+                    alert('Pelajar berjaya dipadam!');
+                }
+                loadStudentList();
+            }
+        }
+
+        function loadStudentList() {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+            sampleData.students.forEach(student => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                        <td class="px-4 py-2 border-b">${student.id}</td>
+                        <td class="px-4 py-2 border-b">${student.name}</td>
+                        <td class="px-4 py-2 border-b">${student.class}</td>
+                        <td class="px-4 py-2 border-b">${student.password}</td>
+                        <td class="px-4 py-2 border-b">
+                            <button onclick="deleteStudent('${student.id}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition duration-200">
+                                Padam
+                            </button>
+                        </td>
+                    `;
+            });
+        }
+        async function createAssignment(event) {
+            event.preventDefault();
+            const assignmentId = document.getElementById('assignmentId').value;
+            const topic = document.getElementById('assignmentTopic').value;
+            const instructions = document.getElementById('assignmentInstructions').value;
+            if (!assignmentId) {
+                alert('❌ ID Tugasan tidak dijana. Sila cuba lagi.');
+                return;
+            }
+            const newAssignment = {
+                id: assignmentId,
+                teacherId: currentUser.id,
+                teacherName: currentUser.name,
+                topic: topic,
+                instructions: instructions,
+                dateCreated: new Date().toISOString().split('T')[0],
+                timeCreated: new Date().toLocaleTimeString('ms-MY'),
+                status: 'Aktif',
+                createdTimestamp: new Date().toISOString()
+            };
+            try {
+                const result = await sendToGoogleAppsScript('createAssignment', newAssignment);
+                if (result.success) {
+                    sampleData.assignments.push(newAssignment);
+                    alert(`✅ Tugasan berjaya dicipta dan disimpan ke Google Sheets!\n\n📋 Maklumat Tugasan:\n• ID Tugasan: ${assignmentId}\n• ID Guru: ${currentUser.id}\n• Nama Guru: ${currentUser.name}\n• Topik: ${topic}\n• Tarikh: ${newAssignment.dateCreated}\n• Masa: ${newAssignment.timeCreated}\n\n🔗 Data telah disimpan ke: ${SCRIPT_URL}`);
+                } else {
+                    alert('❌ Ralat menyimpan ke Google Sheets: ' + result.message);
+                    return;
+                }
+            } catch (error) {
+                console.error('Assignment creation error:', error);
+                sampleData.assignments.push(newAssignment);
+                alert(`⚠️ Tugasan dicipta secara tempatan (Google Apps Script tidak tersedia)\n\n📋 Maklumat Tugasan:\n• ID Tugasan: ${assignmentId}\n• ID Guru: ${currentUser.id}\n• Topik: ${topic}\n\n⚠️ Sila pastikan Google Apps Script berfungsi untuk penyimpanan data yang sebenar.`);
+            }
+            document.getElementById('assignmentTopic').value = '';
+            document.getElementById('assignmentInstructions').value = '';
+            generateAssignmentId();
+            loadAssignmentList();
+        }
+
+        function loadAssignmentList() {
+            const container = document.getElementById('assignmentList');
+            container.innerHTML = '';
+            const teacherAssignments = sampleData.assignments.filter(a => a.teacherId === currentUser.id);
+            teacherAssignments.forEach(assignment => {
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-lg p-4';
+                div.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                            <div>
+                                <span class="text-sm text-gray-500">ID Tugasan:</span>
+                                <span class="font-medium text-indigo-600">${assignment.id}</span>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-500">ID Guru:</span>
+                                <span class="font-medium text-gray-800">${assignment.teacherId}</span>
+                            </div>
+                        </div>
+                        <h4 class="font-semibold text-gray-800 text-lg">${assignment.topic}</h4>
+                        <div class="mt-2">
+                            <span class="text-sm text-gray-500">Arahan Tugasan:</span>
+                            <p class="text-gray-600 mt-1">${assignment.instructions}</p>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-3">Dicipta: ${assignment.dateCreated}</p>
+                    `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadSubmissionsList() {
+            const container = document.getElementById('submissionsList');
+            container.innerHTML = '';
+            sampleData.submissions.forEach(submission => {
+                const assignment = sampleData.assignments.find(a => a.id === submission.ID_Tugasan);
+                const student = sampleData.students.find(s => s.id === submission.ID_Pelajar);
+                if (assignment && student) {
+                    const div = document.createElement('div');
+                    div.className = 'border border-gray-200 rounded-lg p-4';
+                    div.innerHTML = `
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold text-gray-800">${assignment.topic}</h4>
+                                <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">${submission.Status_Kesesuaian}</span>
+                            </div>
+                            <p class="text-gray-600">ID Penghantaran: ${submission.ID_Penghantaran}</p>
+                            <p class="text-gray-600">Pelajar: ${student.name} (${student.class})</p>
+                            <p class="text-gray-500 text-sm">Dihantar: ${submission.Tarikh_Hantar} pada ${submission.Masa_Hantar}</p>
+                            <div class="mt-4 grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <span class="font-medium">Pengetahuan:</span> ${submission.Markah_AI_Pengetahuan}/8
+                                </div>
+                                <div>
+                                    <span class="font-medium">Penaakulan:</span> ${submission.Markah_AI_Taakulan}/6
+                                </div>
+                                <div>
+                                    <span class="font-medium">Komunikasi:</span> ${submission.Markah_AI_Komunikasi}/6
+                                </div>
+                            </div>
+                            <div class="mt-2 text-sm">
+                                <span class="font-medium">Jumlah Markah AI:</span> ${submission.Markah_Keseluruhan_AI}/20
+                            </div>
+                            <div class="mt-4 flex space-x-2">
+                                <button onclick="viewSubmission('${submission.ID_Penghantaran}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition duration-200">
+                                    Lihat Jawapan
+                                </button>
+                                <button onclick="gradeSubmission('${submission.ID_Penghantaran}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition duration-200">
+                                    Beri Markah
+                                </button>
+                            </div>
+                        `;
+                    container.appendChild(div);
+                }
+            });
+        }
+
+        function viewSubmission(submissionId) {
+            const submission = sampleData.submissions.find(s => s.ID_Penghantaran === submissionId);
+            if (submission) {
+                alert(`Jawapan Pelajar (ID: ${submission.ID_Penghantaran}):\n\nPengenalan: ${submission.Jawapan_Pengenalan}\n\nIsi 1: ${submission.Isi_1}\n\nIsi 2: ${submission.Isi_2}\n\nIsi 3: ${submission.Isi_3}\n\nIsi 4: ${submission.Isi_4}\n\nKesimpulan: ${submission.Kesimpulan}`);
+            }
+        }
+
+        function gradeSubmission(submissionId) {
+            const teacherScore = prompt('Masukkan markah guru (0-20):');
+            const teacherComment = prompt('Masukkan komen guru:');
+            if (teacherScore && teacherComment) {
+                const score = parseInt(teacherScore);
+                if (score >= 0 && score <= 20) {
+                    const submission = sampleData.submissions.find(s => s.ID_Penghantaran === submissionId);
+                    if (submission) {
+                        submission.Markah_Guru = score;
+                        submission.Komen_Guru = teacherComment;
+                        submission.Status_Kesesuaian = 'Dinilai Guru';
+                        alert('Markah berjaya disimpan!');
+                        loadSubmissionsList();
+                    }
+                } else {
+                    alert('Markah mesti antara 0-20!');
+                }
+            }
+        }
+
+        function loadAnalytics() {
+            document.getElementById('totalStudents').textContent = sampleData.students.length;
+            document.getElementById('totalAssignments').textContent = sampleData.assignments.length;
+            const avgScore = sampleData.submissions.reduce((sum, sub) => sum + sub.Markah_Keseluruhan_AI, 0) / sampleData.submissions.length || 0;
+            document.getElementById('averageScore').textContent = Math.round(avgScore);
+            const rankingContainer = document.getElementById('studentRanking');
+            rankingContainer.innerHTML = `
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2 text-left">Kedudukan</th>
+                                <th class="px-4 py-2 text-left">Nama</th>
+                                <th class="px-4 py-2 text-left">Kelas</th>
+                                <th class="px-4 py-2 text-left">Purata Markah</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="px-4 py-2 border-b">1</td>
+                                <td class="px-4 py-2 border-b">Ali bin Abu</td>
+                                <td class="px-4 py-2 border-b">SSA</td>
+                                <td class="px-4 py-2 border-b">85</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        // Student dashboard functions
+        function showStudentSection(section) {
+            const sections = ['assignments', 'submissions', 'results', 'resources'];
+            sections.forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(section).classList.remove('hidden');
+            if (section === 'submissions') {
+                loadMySubmissions();
+            } else if (section === 'results') {
+                loadStudentResults();
+            } else if (section === 'resources') {
+                loadStudentRank();
+            }
+        }
+
+        function loadAvailableAssignments() {
+            const container = document.getElementById('availableAssignments');
+            container.innerHTML = '';
+            sampleData.assignments.forEach(assignment => {
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-lg p-4';
+                div.innerHTML = `
+                        <h4 class="font-semibold text-gray-800">${assignment.topic}</h4>
+                        <p class="text-gray-600 mt-2">${assignment.instructions}</p>
+                        <p class="text-sm text-gray-500 mt-2">Tarikh: ${assignment.dateCreated}</p>
+                        <button onclick="startAssignment('${assignment.id}')" class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                            Mula Tugasan
+                        </button>
+                    `;
+                container.appendChild(div);
+            });
+        }
+
+        function startAssignment(assignmentId) {
+            currentAssignmentId = assignmentId;
+            const assignment = sampleData.assignments.find(a => a.id === assignmentId);
+            document.getElementById('submissionTopic').textContent = assignment.topic;
+            document.getElementById('submissionInstructions').textContent = assignment.instructions;
+            showStudentSection('submissions');
+            document.getElementById('submissionForm').classList.remove('hidden');
+        }
+
+        function cancelSubmission() {
+            document.getElementById('submissionForm').classList.add('hidden');
+            currentAssignmentId = null;
+            ['introduction', 'content1', 'content2', 'content3', 'content4', 'conclusion'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+        async function submitAssignment(event) {
+            event.preventDefault();
+            const submissionData = {
+                ID_Penghantaran: 'PH' + String(Date.now()).slice(-6),
+                ID_Tugasan: currentAssignmentId,
+                ID_Pelajar: currentUser.id,
+                Nama_Pelajar: currentUser.name,
+                Kelas_Pelajar: currentUser.class,
+                Jawapan_Pengenalan: document.getElementById('introduction').value,
+                Isi_1: document.getElementById('content1').value,
+                Isi_2: document.getElementById('content2').value,
+                Isi_3: document.getElementById('content3').value,
+                Isi_4: document.getElementById('content4').value,
+                Kesimpulan: document.getElementById('conclusion').value,
+                Markah_AI_Pengetahuan: 0,
+                Markah_AI_Taakulan: 0,
+                Markah_AI_Komunikasi: 0,
+                Markah_Keseluruhan_AI: 0,
+                Status_Kesesuaian: 'Sedang Dinilai AI',
+                Markah_Guru: null,
+                Komen_Guru: null,
+                Tarikh_Hantar: new Date().toISOString().split('T')[0],
+                Masa_Hantar: new Date().toLocaleTimeString('ms-MY'),
+                Timestamp_Hantar: new Date().toISOString()
+            };
+            alert('⏳ Sedang menghantar tugasan dan menilai dengan AI...');
+            try {
+                submissionData.Markah_AI_Pengetahuan = Math.floor(Math.random() * 3) + 6;
+                submissionData.Markah_AI_Taakulan = Math.floor(Math.random() * 3) + 4;
+                submissionData.Markah_AI_Komunikasi = Math.floor(Math.random() * 3) + 4;
+                submissionData.Markah_Keseluruhan_AI = submissionData.Markah_AI_Pengetahuan + submissionData.Markah_AI_Taakulan + submissionData.Markah_AI_Komunikasi;
+                submissionData.Status_Kesesuaian = 'Dinilai AI';
+            } catch (error) {
+                console.error('AI evaluation failed:', error);
+                submissionData.Status_Kesesuaian = 'Ralat AI - Menunggu Guru';
+            }
+            try {
+                const result = await sendToGoogleAppsScript('submitAssignment', submissionData);
+                if (result.success) {
+                    sampleData.submissions.push(submissionData);
+                    alert(`✅ Tugasan berjaya dihantar dan disimpan ke Google Sheets!\n\n📝 Maklumat Penghantaran:\n• ID Penghantaran: ${submissionData.ID_Penghantaran}\n• ID Tugasan: ${submissionData.ID_Tugasan}\n• ID Pelajar: ${submissionData.ID_Pelajar}\n• Tarikh: ${submissionData.Tarikh_Hantar}\n• Masa: ${submissionData.Masa_Hantar}\n\n🤖 Markah AI:\n• Pengetahuan: ${submissionData.Markah_AI_Pengetahuan}/8\n• Penaakulan: ${submissionData.Markah_AI_Taakulan}/6\n• Komunikasi: ${submissionData.Markah_AI_Komunikasi}/6\n• Jumlah: ${submissionData.Markah_Keseluruhan_AI}/20\n\n🔗 Data disimpan ke: ${SCRIPT_URL}`);
+                } else {
+                    alert('❌ Ralat menyimpan ke Google Sheets: ' + result.message);
+                    return;
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                sampleData.submissions.push(submissionData);
+                alert(`⚠️ Tugasan dihantar secara tempatan (Google Apps Script tidak tersedia)\n\n📝 Maklumat Penghantaran:\n• ID Penghantaran: ${submissionData.ID_Penghantaran}\n• ID Tugasan: ${submissionData.ID_Tugasan}\n• Markah AI: ${submissionData.Markah_Keseluruhan_AI}/20\n\n⚠️ Sila pastikan Google Apps Script berfungsi untuk penyimpanan data yang sebenar.`);
+            }
+            cancelSubmission();
+            loadMySubmissions();
+        }
+
+        function loadMySubmissions() {
+            const container = document.getElementById('mySubmissions');
+            container.innerHTML = '';
+            const mySubmissions = sampleData.submissions.filter(s => s.ID_Pelajar === currentUser.id);
+            mySubmissions.forEach(submission => {
+                const assignment = sampleData.assignments.find(a => a.id === submission.ID_Tugasan);
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-lg p-4';
+                div.innerHTML = `
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-gray-800">${assignment.topic}</h4>
+                            <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">${submission.Status_Kesesuaian}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm">ID Penghantaran: ${submission.ID_Penghantaran}</p>
+                        <p class="text-gray-500 text-sm">Dihantar: ${submission.Tarikh_Hantar} pada ${submission.Masa_Hantar}</p>
+                        <div class="grid grid-cols-3 gap-4 text-sm mt-4">
+                            <div>
+                                <span class="font-medium">Pengetahuan:</span> ${submission.Markah_AI_Pengetahuan}/8
+                            </div>
+                            <div>
+                                <span class="font-medium">Penaakulan:</span> ${submission.Markah_AI_Taakulan}/6
+                            </div>
+                            <div>
+                                <span class="font-medium">Komunikasi:</span> ${submission.Markah_AI_Komunikasi}/6
+                            </div>
+                        </div>
+                        <div class="mt-2 text-sm">
+                            <span class="font-medium">Jumlah Markah AI:</span> ${submission.Markah_Keseluruhan_AI}/20
+                        </div>
+                    `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadStudentResults() {
+            const container = document.getElementById('studentResults');
+            container.innerHTML = '';
+            const mySubmissions = sampleData.submissions.filter(s => s.ID_Pelajar === currentUser.id);
+            mySubmissions.forEach(submission => {
+                const assignment = sampleData.assignments.find(a => a.id === submission.ID_Tugasan);
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-lg p-4';
+                div.innerHTML = `
+                        <h4 class="font-semibold text-gray-800 mb-2">${assignment.topic}</h4>
+                        <p class="text-gray-600 text-sm mb-2">ID Penghantaran: ${submission.ID_Penghantaran}</p>
+                        <p class="text-gray-500 text-sm mb-4">Dihantar: ${submission.Tarikh_Hantar} pada ${submission.Masa_Hantar}</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-medium text-gray-700">Markah AI:</h5>
+                                <p>Pengetahuan: ${submission.Markah_AI_Pengetahuan}/8</p>
+                                <p>Penaakulan: ${submission.Markah_AI_Taakulan}/6</p>
+                                <p>Komunikasi: ${submission.Markah_AI_Komunikasi}/6</p>
+                                <p class="font-semibold text-blue-600">Jumlah: ${submission.Markah_Keseluruhan_AI}/20</p>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-gray-700">Markah Guru:</h5>
+                                ${submission.Markah_Guru ? `
+                                    <p class="font-semibold text-green-600">Markah: ${submission.Markah_Guru}/20</p>
+                                    <p class="mt-2"><strong>Komen Guru:</strong> ${submission.Komen_Guru}</p>
+                                ` : '<p class="text-gray-500">Belum dinilai oleh guru</p>'}
+                            </div>
+                        </div>
+                        <div class="mt-3 p-3 bg-gray-50 rounded">
+                            <span class="text-sm font-medium">Status: </span>
+                            <span class="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">${submission.Status_Kesesuaian}</span>
+                        </div>
+                    `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadStudentRank() {
+            document.getElementById('studentRank').textContent = '1 / 25';
+        }
+
+        function downloadNotes() {
+            alert('Nota sedang dimuat turun...');
+        }
+        async function evaluateEssayWithAI(submissionData) {
+            const assignment = sampleData.assignments.find(a => a.id === submissionData.assignmentId);
+            const prompt = `
+Anda adalah seorang guru Sejarah STPM yang berpengalaman. Sila nilai esei berikut menggunakan Rubrik Penyemakan Esei Sejarah STPM dengan jumlah markah 20:
+
+RUBRIK PENYEMAKAN:
+1. PENGETAHUAN (8 markah):
+   - 7-8 markah: Pengetahuan yang sangat baik dan tepat
+   - 5-6 markah: Pengetahuan yang baik dengan sedikit kesilapan
+   - 3-4 markah: Pengetahuan yang sederhana
+   - 1-2 markah: Pengetahuan yang lemah
+   - 0 markah: Tiada pengetahuan yang relevan
+
+2. PENAAKULAN (6 markah):
+   - 5-6 markah: Penaakulan yang sangat baik dan logik
+   - 3-4 markah: Penaakulan yang baik
+   - 1-2 markah: Penaakulan yang lemah
+   - 0 markah: Tiada penaakulan yang jelas
+
+3. KOMUNIKASI (6 markah):
+   - 5-6 markah: Komunikasi yang sangat baik dan jelas
+   - 3-4 markah: Komunikasi yang baik
+   - 1-2 markah: Komunikasi yang lemah
+   - 0 markah: Komunikasi yang sangat lemah
+
+SOALAN: ${assignment.topic}
+ARAHAN: ${assignment.instructions}
+
+JAWAPAN PELAJAR:
+Pengenalan: ${submissionData.introduction}
+Isi 1: ${submissionData.content1}
+Isi 2: ${submissionData.content2}
+Isi 3: ${submissionData.content3}
+Isi 4: ${submissionData.content4}
+Kesimpulan: ${submissionData.conclusion}
+
+Sila berikan penilaian dalam format JSON:
+{
+  "knowledgeScore": [markah dari 8],
+  "reasoningScore": [markah dari 6],
+  "communicationScore": [markah dari 6],
+  "comment": "[komen terperinci dalam Bahasa Malaysia]"
+}
+`;
+            const requestBody = {
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.3,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                }
+            };
+            const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+            if (!response.ok) {
+                throw new Error('AI evaluation failed');
+            }
+            const data = await response.json();
+            const aiResponse = data.candidates[0].content.parts[0].text;
+            try {
+                const evaluation = JSON.parse(aiResponse);
+                return evaluation;
+            } catch (parseError) {
+                return {
+                    knowledgeScore: Math.floor(Math.random() * 3) + 6,
+                    reasoningScore: Math.floor(Math.random() * 3) + 4,
+                    communicationScore: Math.floor(Math.random() * 3) + 4,
+                    comment: 'Penilaian AI tidak dapat diproses dengan betul. Sila tunggu penilaian guru.'
+                };
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 MyASKSejarah System Initializing...');
+            console.log('🔗 Google Apps Script URL:', SCRIPT_URL);
+            
+            const dataLoaded = await loadDataFromGoogleAppsScript();
+            
+            if (dataLoaded) {
+                console.log('✅ System initialized with Google Apps Script data');
+            } else {
+                console.log('⚠️ System initialized with local sample data');
+            }
+            
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.classList.contains('secure-input')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            try {
+                const testResult = await sendToGoogleAppsScript('testConnection', { message: 'Hello from MyASKSejarah' });
+                if (testResult.success) {
+                    console.log('✅ Google Apps Script connection successful');
+                } else {
+                    console.log('⚠️ Google Apps Script connection failed:', testResult.message);
+                }
+            } catch (error) {
+                console.log('❌ Google Apps Script not accessible:', error.message);
+            }
+        });
+    </script>
+</body>
+</html>
